@@ -2,7 +2,14 @@ import websockets
 import asyncio
 import json
 from datetime import datetime
+import sys
+# Assuming Directory A is a sibling of Directory B
+sys.path.append('../actual_b_s_P/pump_fun_py')
 
+import pump_fun
+sol_in = .02
+slippage = 5
+percentage = 100
 # PumpPortal WebSocket URL
 WS_URL = "wss://pumpportal.fun/api/data"
 
@@ -33,20 +40,22 @@ async def listen_for_new_tokens():
                     token_info = data
                 else:
                     continue
-                if token_info.get('marketCapSol') > 41 :        
-                    print("\n" + "=" * 50)
-                    print(f"New token created: {token_info.get('name')} ({token_info.get('symbol')})")
-                    print("=" * 50)
+                if token_info.get('marketCapSol') > 42 : 
+                    # mint_str = token_info.get('mint')
+                    # pump_fun.buy(mint_str, sol_in, slippage)
+                    # print("\n" + "=" * 50)
+                    # print(f"New token created: {token_info.get('name')} ({token_info.get('symbol')})")
+                    # print("=" * 50)
                     print(f"Address:        {token_info.get('mint')}")
-                    # print(f"Creator:        {token_info.get('traderPublicKey')}")
-                    print(f"Initial Buy:    {format_sol(token_info.get('initialBuy', 0))}")
+                    # # print(f"Creator:        {token_info.get('traderPublicKey')}")
+                    # print(f"Initial Buy:    {format_sol(token_info.get('initialBuy', 0))}")
                     print(f"Market Cap:     {format_sol(token_info.get('marketCapSol', 0))}")
-                    # print(f"Bonding Curve:  {token_info.get('bondingCurveKey')}")
-                    # print(f"Virtual SOL:    {format_sol(token_info.get('vSolInBondingCurve', 0))}")
-                    # print(f"Virtual Tokens: {token_info.get('vTokensInBondingCurve', 0):,.0f}")
-                    # print(f"Metadata URI:   {token_info.get('uri')}")
-                    # print(f"Signature:      {token_info.get('signature')}")
-                    print("=" * 50)
+                    # # print(f"Bonding Curve:  {token_info.get('bondingCurveKey')}")
+                    # # print(f"Virtual SOL:    {format_sol(token_info.get('vSolInBondingCurve', 0))}")
+                    # # print(f"Virtual Tokens: {token_info.get('vTokensInBondingCurve', 0):,.0f}")
+                    # # print(f"Metadata URI:   {token_info.get('uri')}")
+                    # # print(f"Signature:      {token_info.get('signature')}")
+                    # print("=" * 50)
             except websockets.exceptions.ConnectionClosed:
                 print("\nWebSocket connection closed. Reconnecting...")
                 break

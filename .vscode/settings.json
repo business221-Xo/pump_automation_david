@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./actual_b_s_P/pump_fun_py"
+    ]
+}
