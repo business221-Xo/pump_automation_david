@@ -1,7 +1,7 @@
 from pump_fun import buy
 
 # Buy Example
-mint_str = "C2sGX4Lo8hHCVX3VpWcxD3utCRi1U9Y9Fb5tsgFrpump"
+mint_str = "GcaatKqwueEMHT9tGYFD3nexSkpBrRABEJhXYRZKpump"
 sol_in = .002
 slippage = 5
 buy(mint_str, sol_in, slippage)
