@@ -27,8 +27,8 @@ async def listen_for_new_tokens():
             "params": []
         }))
 
-        print("Listening for new token creations...")
-
+        print("Lis creations...")
+# listening
         while True:
             try:
                 message = await websocket.recv()
@@ -59,6 +59,7 @@ async def listen_for_new_tokens():
                         # print("=" * 50)
                         await asyncio.sleep(20)
                         pump_fun.sell(mint_str, percentage, slippage)
+                        print("done20")
                     else :
                         mint_str = token_info.get('mint')
                         pump_fun.buy(mint_str, sol_in, slippage)
@@ -66,6 +67,7 @@ async def listen_for_new_tokens():
                         print(f"Market Cap:     {format_sol(token_info.get('marketCapSol', 0))}")
                         await asyncio.sleep(40)
                         pump_fun.sell(mint_str, percentage, slippage)
+                        print("done40")
             except websockets.exceptions.ConnectionClosed:
                 print("\nWebSocket connection closed. Reconnecting...")
                 break
