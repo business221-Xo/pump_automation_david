@@ -16,6 +16,7 @@ from utils import confirm_txn, get_token_balance
 from coin_data import get_coin_data, sol_for_tokens, tokens_for_sol
 
 def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
+    print("play_B")
     try:
         print(f"Starting buy transaction for mint: {mint_str}")
 

@@ -49,10 +49,13 @@ def derive_bonding_curve_accounts(mint_str: str):
 
 def get_coin_data(mint_str: str) -> Optional[CoinData]:
     bonding_curve, associated_bonding_curve = derive_bonding_curve_accounts(mint_str)
+    print(f"giet_coin_data {bonding_curve} {associated_bonding_curve}")
+
     if bonding_curve is None or associated_bonding_curve is None:
         return None
 
     virtual_reserves = get_virtual_reserves(bonding_curve)
+    print(f"{virtual_reserves}")
     if virtual_reserves is None:
         return None
 

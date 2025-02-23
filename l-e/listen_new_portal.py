@@ -60,7 +60,7 @@ async def listen_for_new_tokens():
                         # print("=" * 50)
                         await asyncio.sleep(20)
                         pump_fun.sell(mint_str, percentage, slippage)
-                        # print("done20")
+                        print("done20")
                     else :
                         mint_str = token_info.get('mint')
                         print(mint_str)
@@ -69,7 +69,7 @@ async def listen_for_new_tokens():
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")
                         await asyncio.sleep(40)
                         pump_fun.sell(mint_str, percentage, slippage)
-                        # print("done40")
+                        print("done40")
             except websockets.exceptions.ConnectionClosed:
                 print("\nWebSocket connection closed. Reconnecting...")
                 break
