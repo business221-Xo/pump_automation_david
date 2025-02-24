@@ -105,7 +105,7 @@ def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
         # print("Confirming transaction...")
         confirmed = confirm_txn(txn_sig)
         
-        print(f"B-T confirmed: {confirmed}")
+        print(f"B-T con: {confirmed}")
         return confirmed
 
     except Exception as e:
@@ -207,7 +207,7 @@ def sell(mint_str: str, percentage: int = 100, slippage: int = 5) -> bool:
         # print("Confirming transaction...")
         confirmed = confirm_txn(txn_sig)
         
-        print(f"S-T confirmed: {confirmed}")
+        print(f"S-T con: {confirmed}")
         return confirmed
 
     except Exception as e:

@@ -28,7 +28,7 @@ def listen_for_new_tokens():
     }))
 
     print("Lis for creations...")
-    
+    global sol_in
     while True:
         try:
             message = ws.recv()
@@ -43,26 +43,33 @@ def listen_for_new_tokens():
             
             if token_info.get('marketCapSol') > 42:
                 if token_info.get('marketCapSol') < 110:
+                     
+                    sol_in = 0.01
                     mint_str = token_info.get('mint')
                     print(mint_str)
                     print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                     print(f"{format_sol(token_info.get('marketCapSol', 0))}")
                     # time.sleep(1)
-                    buy(mint_str, sol_in, slippage)
-                    time.sleep(19)
-                    sell(mint_str, percentage, slippage)
-                    print("done20")
+                    # buy(mint_str, sol_in, slippage)
+                    # time.sleep(22)
+                    # b_state = sell(mint_str, percentage, slippage)
+                    # while b_state is None:
+                    #     b_state = sell(mint_str, percentage, slippage)
+                    # print("done20")
                 else:
+                    sol_in = .02
                     mint_str = token_info.get('mint')
                     print(mint_str)
                     print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                     print(f"{format_sol(token_info.get('marketCapSol', 0))}")
                     # time.sleep(1)
-                    buy(mint_str, sol_in, slippage)
-                    time.sleep(39)
-                    sell(mint_str, percentage, slippage)
-                    print("done40")
-        except websocket.WebSocketException as e:
+        #             buy(mint_str, sol_in, slippage)
+        #             time.sleep(32)
+        #             s_state = sell(mint_str, percentage, slippage)
+        #             while s_state is None:
+        #                 s_state = sell(mint_str, percentage, slippage)
+        #             print("done40")
+        # except websocket.WebSocketException as e:
             print(f"\nWebSocket connection closed. Reconnecting...")
             break
         except json.JSONDecodeError:

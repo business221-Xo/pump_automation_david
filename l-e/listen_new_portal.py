@@ -14,7 +14,7 @@ percentage = 100
 WS_URL = "wss://pumpportal.fun/api/data"
 
 def format_sol(value):
-    return f"{value:.6f} SOL"
+    return f"{value:.6f} "
 
 def format_timestamp(timestamp):
     return datetime.fromtimestamp(timestamp / 1000).strftime('%Y-%m-%d %H:%M:%S')
@@ -43,8 +43,8 @@ async def listen_for_new_tokens():
                 if token_info.get('marketCapSol') > 42 :
                     if token_info.get('marketCapSol') < 110 : 
                         mint_str = token_info.get('mint')
-                        # print(mint_str)
-                        pump_fun.buy(mint_str, sol_in, slippage)
+                        print(mint_str)
+                        # pump_fun.buy(mint_str, sol_in, slippage)
                         # print("\n" + "=" * 50)
                         print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         # print("=" * 50)
@@ -58,18 +58,18 @@ async def listen_for_new_tokens():
                         # # print(f"Metadata URI:   {token_info.get('uri')}")
                         # # print(f"Signature:      {token_info.get('signature')}")
                         # print("=" * 50)
-                        await asyncio.sleep(20)
-                        pump_fun.sell(mint_str, percentage, slippage)
-                        print("done20")
+                        # await asyncio.sleep(12)
+                        # pump_fun.sell(mint_str, percentage, slippage)
+                        # print("done20")
                     else :
                         mint_str = token_info.get('mint')
                         print(mint_str)
-                        pump_fun.buy(mint_str, sol_in, slippage)
+                        # pump_fun.buy(mint_str, sol_in, slippage)
                         print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")
-                        await asyncio.sleep(40)
-                        pump_fun.sell(mint_str, percentage, slippage)
-                        print("done40")
+                        # await asyncio.sleep(37)
+                        # pump_fun.sell(mint_str, percentage, slippage)
+                        # print("done40")
             except websockets.exceptions.ConnectionClosed:
                 print("\nWebSocket connection closed. Reconnecting...")
                 break

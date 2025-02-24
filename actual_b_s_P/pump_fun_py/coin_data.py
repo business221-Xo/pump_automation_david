@@ -34,7 +34,7 @@ def get_virtual_reserves(bonding_curve: Pubkey):
         parsed_data = bonding_curve_struct.parse(data)
         return parsed_data
     except Exception as e:
-        print(f"An error occurred: {e}")
+        # print(f"An error occurred: {e}")
         return None
 
 def derive_bonding_curve_accounts(mint_str: str):
@@ -51,7 +51,7 @@ def derive_bonding_curve_accounts(mint_str: str):
 
 def get_coin_data(mint_str: str) -> Optional[CoinData]:
     bonding_curve, associated_bonding_curve = derive_bonding_curve_accounts(mint_str)
-    print(f"giet_coin_data {bonding_curve} {associated_bonding_curve}")
+    # print(f"giet_coin_data {bonding_curve} {associated_bonding_curve}")
 
     if bonding_curve is None or associated_bonding_curve is None:
         return None
@@ -64,7 +64,7 @@ def get_coin_data(mint_str: str) -> Optional[CoinData]:
         time.sleep(0.5)  # Wait for 1 second
         virtual_reserves = get_virtual_reserves(bonding_curve)  # Try fetching again
         attempt += 1
-    # print(f"{virtual_reserves}")
+    print(f"{attempt}")
     if virtual_reserves is None:
         return None
 
@@ -79,7 +79,7 @@ def get_coin_data(mint_str: str) -> Optional[CoinData]:
             complete=bool(virtual_reserves.complete),
         )
     except Exception as e:
-        print(e)
+        # print(e)
         return None
 
 def sol_for_tokens(sol_spent, sol_reserves, token_reserves):

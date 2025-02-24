@@ -35,7 +35,7 @@ def confirm_txn(txn_sig: Signature, max_retries: int = 20, retry_interval: int =
             txn_json = json.loads(txn_res.value.transaction.meta.to_json())
             
             if txn_json['err'] is None:
-                print("Transaction confirmed... try count:", retries)
+                # print("Transaction confirmed... try count:", retries)
                 return True
             
             print("Error: Transaction not confirmed. Retrying...")
@@ -43,7 +43,7 @@ def confirm_txn(txn_sig: Signature, max_retries: int = 20, retry_interval: int =
                 print("Transaction failed.")
                 return False
         except Exception as e:
-            print("Awaiting confirmation... try count:", retries)
+            # print("Awaiting confirmation... try count:", retries)
             retries += 1
             time.sleep(retry_interval)
     
