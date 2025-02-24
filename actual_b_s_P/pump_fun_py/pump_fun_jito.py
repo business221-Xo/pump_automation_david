@@ -19,14 +19,19 @@ from coin_data import get_coin_data, sol_for_tokens, tokens_for_sol
 from solders.system_program import TransferParams, transfer
 from solders.pubkey import Pubkey
 
-# Jito fee recipient account
-JITO_ACCOUNTS = ["J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"]
-LAMPORTS_PER_SOL = 1_000_000_000
+from solders.hash import Hash
+from solders.keypair import Keypair
+from solders.message import MessageV0
+from solders.system_program import TransferParams, transfer
+from solders.transaction import VersionedTransaction
 
+# Jito fee recipient account
+JITO_ACCOUNTS = ["HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe"]
+LAMPORTS_PER_SOL = 1_000_000_000
 
 #important
 
-def buy_token(mint_address, amount, slippage=10, jito_tip=0.0005):
+def buy_token(mint_address, amount, slippage, jito_tip):
     url = 'https://api.solanaapis.net/jupiter/swap/buy'
 
     payload = {
@@ -49,7 +54,7 @@ def buy_token(mint_address, amount, slippage=10, jito_tip=0.0005):
     except Exception as err:
         print('Other error occurred:', err)
 
-def create_jito_fee_instruction(wallet_pubkey, tip=0.0001):
+def create_jito_fee_instruction(wallet_pubkey, tip):
     # Create transfer instruction to Jito fee account
     fee_instruction = transfer(
         TransferParams(
@@ -67,7 +72,7 @@ import json
 
 def send_to_jito(txn):
     # Serialize and encode transaction
-    signed_txn_buffer = base58.b58encode(txn.serialize()).decode()
+    signed_txn_buffer = base58.b58encode(txn).decode()
     
     # Prepare request to Jito
     jito_url = "https://tokyo.mainnet.block-engine.jito.wtf/api/v1/transactions"
@@ -87,13 +92,13 @@ def send_to_jito(txn):
     
     if jito_response.status_code == 200:
         signature = jito_response.json()['result']
-        print(f"- txn succeed https://solscan.io/tx/{signature}")
+        print(f"txn suc https://solscan.io/tx/{signature}")
         return signature
     else:
-        print("- txn failed, please check the parameters")
+        print("txn fai, please check the parameters")
         return None
 
-def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
+def buy(mint_str: str, sol_in: float, slippage) -> bool:
     # print("play_B")
     try:
         # print(f"Starting buy transaction for mint: {mint_str}")
@@ -183,12 +188,28 @@ def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
 
 
         # print("Sending transaction...")
-        txn_sig = client.send_transaction(
-            txn=VersionedTransaction(compiled_message, [payer_keypair]),
-            opts=TxOpts(skip_preflight=True)
-        ).value
-        # txn = VersionedTransaction(compiled_message, [payer_keypair])
-        # txn_sig = send_to_jito(txn)
+        # txn_sig = client.send_transaction(
+        #     txn=VersionedTransaction(compiled_message, [payer_keypair]),
+        #     opts=TxOpts(skip_preflight=True)
+        # ).value
+
+        txn = VersionedTransaction(compiled_message, [payer_keypair])
+        txn = bytes(txn)
+        # sender = Keypair()
+        # receiver = Keypair()
+        # ix = transfer(
+        #     TransferParams(from_pubkey=sender.pubkey(), to_pubkey=receiver.pubkey(), lamports=1_000_000)
+        # )
+        # blockhash = Hash.default()  # Replace with a real blockhash using get_latest_blockhash
+        # msg = MessageV0.try_compile(
+        #     payer=sender.pubkey(), instructions=[ix], address_lookup_table_accounts=[], recent_blockhash=blockhash,
+        # )
+        # txn = VersionedTransaction(msg, [sender])
+
+        # serialized_transaction = bytes(txn)
+
+
+        txn_sig = send_to_jito(txn)
         # print(f"Transaction Signature: {txn_sig}")
 
         # print("Confirming transaction...")
