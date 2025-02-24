@@ -1,3 +1,4 @@
+import time
 from dataclasses import dataclass
 from typing import Optional
 from construct import Flag, Int64ul, Padding, Struct
@@ -56,7 +57,14 @@ def get_coin_data(mint_str: str) -> Optional[CoinData]:
         return None
 
     virtual_reserves = get_virtual_reserves(bonding_curve)
-    print(f"{virtual_reserves}")
+    max_attempts = 60
+    attempt = 0
+    while virtual_reserves is None and attempt < max_attempts:
+        # print(f"Waiting for data... Attempt {attempt+1}/{max_attempts}")
+        time.sleep(0.5)  # Wait for 1 second
+        virtual_reserves = get_virtual_reserves(bonding_curve)  # Try fetching again
+        attempt += 1
+    # print(f"{virtual_reserves}")
     if virtual_reserves is None:
         return None
 

@@ -16,9 +16,9 @@ from utils import confirm_txn, get_token_balance
 from coin_data import get_coin_data, sol_for_tokens, tokens_for_sol
 
 def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
-    print("play_B")
+    # print("play_B")
     try:
-        print(f"Starting buy transaction for mint: {mint_str}")
+        # print(f"Starting buy transaction for mint: {mint_str}")
 
         coin_data = get_coin_data(mint_str)
         
@@ -35,17 +35,17 @@ def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
         ASSOCIATED_BONDING_CURVE = coin_data.associated_bonding_curve
         USER = payer_keypair.pubkey()
 
-        print("Fetching or creating associated token account...")
+        # print("Fetching or creating associated token account...")
         try:
             ASSOCIATED_USER = client.get_token_accounts_by_owner(USER, TokenAccountOpts(MINT)).value[0].pubkey
             token_account_instruction = None
-            print(f"Token account found: {ASSOCIATED_USER}")
+            # print(f"Token account found: {ASSOCIATED_USER}")
         except:
             ASSOCIATED_USER = get_associated_token_address(USER, MINT)
             token_account_instruction = create_associated_token_account(USER, USER, MINT)
-            print(f"Creating token account : {ASSOCIATED_USER}")
+            # print(f"Creating token account : {ASSOCIATED_USER}")
 
-        print("Calculating transaction amounts...")
+        # print("Calculating transaction amounts...")
         sol_dec = 1e9
         token_dec = 1e6
         virtual_sol_reserves = coin_data.virtual_sol_reserves / sol_dec
@@ -55,9 +55,9 @@ def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
         
         slippage_adjustment = 1 + (slippage / 100)
         max_sol_cost = int((sol_in * slippage_adjustment) * sol_dec)
-        print(f"Amount: {amount}, Max Sol Cost: {max_sol_cost}")
+        # print(f"Amount: {amount}, Max Sol Cost: {max_sol_cost}")
 
-        print("Creating swap instructions...")
+        # print("Creating swap instructions...")
         keys = [
             AccountMeta(pubkey=GLOBAL, is_signer=False, is_writable=False),
             AccountMeta(pubkey=FEE_RECIPIENT, is_signer=False, is_writable=True),
@@ -87,7 +87,7 @@ def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
             instructions.append(token_account_instruction)
         instructions.append(swap_instruction)
 
-        print("Compiling transaction message...")
+        # print("Compiling transaction message...")
         compiled_message = MessageV0.try_compile(
             payer_keypair.pubkey(),
             instructions,
@@ -95,17 +95,17 @@ def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
             client.get_latest_blockhash().value.blockhash,
         )
 
-        print("Sending transaction...")
+        # print("Sending transaction...")
         txn_sig = client.send_transaction(
             txn=VersionedTransaction(compiled_message, [payer_keypair]),
             opts=TxOpts(skip_preflight=True)
         ).value
         print(f"Transaction Signature: {txn_sig}")
 
-        print("Confirming transaction...")
+        # print("Confirming transaction...")
         confirmed = confirm_txn(txn_sig)
         
-        print(f"Transaction confirmed: {confirmed}")
+        print(f"B-T confirmed: {confirmed}")
         return confirmed
 
     except Exception as e:
@@ -114,7 +114,7 @@ def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
 
 def sell(mint_str: str, percentage: int = 100, slippage: int = 5) -> bool:
     try:
-        print(f"Starting sell transaction for mint: {mint_str}")
+        # print(f"Starting sell transaction for mint: {mint_str}")
 
         if not (1 <= percentage <= 100):
             print("Percentage must be between 1 and 100.")
@@ -136,14 +136,14 @@ def sell(mint_str: str, percentage: int = 100, slippage: int = 5) -> bool:
         USER = payer_keypair.pubkey()
         ASSOCIATED_USER = get_associated_token_address(USER, MINT)
 
-        print("Retrieving token balance...")
+        # print("Retrieving token balance...")
         token_balance = get_token_balance(payer_keypair.pubkey(), mint_str)
         if token_balance == 0 or token_balance is None:
             print("Token balance is zero. Nothing to sell.")
             return False
-        print(f"Token Balance: {token_balance}")
+        # print(f"Token Balance: {token_balance}")
         
-        print("Calculating transaction amounts...")
+        # print("Calculating transaction amounts...")
         sol_dec = 1e9
         token_dec = 1e6
         amount = int(token_balance * token_dec)
@@ -154,9 +154,9 @@ def sell(mint_str: str, percentage: int = 100, slippage: int = 5) -> bool:
         
         slippage_adjustment = 1 - (slippage / 100)
         min_sol_output = int((sol_out * slippage_adjustment) * sol_dec)
-        print(f"Amount: {amount}, Minimum Sol Out: {min_sol_output}")
+        # print(f"Amount: {amount}, Minimum Sol Out: {min_sol_output}")
 
-        print("Creating swap instructions...")
+        # print("Creating swap instructions...")
         keys = [
             AccountMeta(pubkey=GLOBAL, is_signer=False, is_writable=False),
             AccountMeta(pubkey=FEE_RECIPIENT, is_signer=False, is_writable=True),
@@ -185,11 +185,11 @@ def sell(mint_str: str, percentage: int = 100, slippage: int = 5) -> bool:
         ]
 
         if percentage == 100:
-            print("Preparing to close token account after swap...")
+            # print("Preparing to close token account after swap...")
             close_account_instruction = close_account(CloseAccountParams(TOKEN_PROGRAM, ASSOCIATED_USER, USER, USER))
             instructions.append(close_account_instruction)
 
-        print("Compiling transaction message...")
+        # print("Compiling transaction message...")
         compiled_message = MessageV0.try_compile(
             payer_keypair.pubkey(),
             instructions,
@@ -197,17 +197,17 @@ def sell(mint_str: str, percentage: int = 100, slippage: int = 5) -> bool:
             client.get_latest_blockhash().value.blockhash,
         )
 
-        print("Sending transaction...")
+        # print("Sending transaction...")
         txn_sig = client.send_transaction(
             txn=VersionedTransaction(compiled_message, [payer_keypair]),
             opts=TxOpts(skip_preflight=True)
         ).value
         print(f"Transaction Signature: {txn_sig}")
 
-        print("Confirming transaction...")
+        # print("Confirming transaction...")
         confirmed = confirm_txn(txn_sig)
         
-        print(f"Transaction confirmed: {confirmed}")
+        print(f"S-T confirmed: {confirmed}")
         return confirmed
 
     except Exception as e:

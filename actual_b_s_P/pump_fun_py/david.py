@@ -5,7 +5,7 @@ import time
 from pump_fun import buy
 from pump_fun import sell
 
-sol_in = .002
+sol_in = .01
 slippage = 5
 percentage = 100
 # PumpPortal WebSocket URL
@@ -27,7 +27,7 @@ def listen_for_new_tokens():
         "params": []
     }))
 
-    print("Listening for creations...")
+    print("Lis for creations...")
     
     while True:
         try:
@@ -47,8 +47,9 @@ def listen_for_new_tokens():
                     print(mint_str)
                     print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                     print(f"{format_sol(token_info.get('marketCapSol', 0))}")
+                    # time.sleep(1)
                     buy(mint_str, sol_in, slippage)
-                    time.sleep(20)
+                    time.sleep(19)
                     sell(mint_str, percentage, slippage)
                     print("done20")
                 else:
@@ -56,8 +57,9 @@ def listen_for_new_tokens():
                     print(mint_str)
                     print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                     print(f"{format_sol(token_info.get('marketCapSol', 0))}")
+                    # time.sleep(1)
                     buy(mint_str, sol_in, slippage)
-                    time.sleep(40)
+                    time.sleep(39)
                     sell(mint_str, percentage, slippage)
                     print("done40")
         except websocket.WebSocketException as e:
