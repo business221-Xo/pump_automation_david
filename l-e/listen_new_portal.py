@@ -7,7 +7,7 @@ import sys
 sys.path.append('../actual_b_s_P/pump_fun_py')
 
 import pump_fun
-sol_in = .02
+sol_in = .01
 slippage = 5
 percentage = 100
 # PumpPortal WebSocket URL
@@ -44,7 +44,7 @@ async def listen_for_new_tokens():
                     if token_info.get('marketCapSol') < 110 : 
                         mint_str = token_info.get('mint')
                         print(mint_str)
-                        # pump_fun.buy(mint_str, sol_in, slippage)
+                        
                         # print("\n" + "=" * 50)
                         print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         # print("=" * 50)
@@ -52,6 +52,7 @@ async def listen_for_new_tokens():
                         # # print(f"Creator:        {token_info.get('traderPublicKey')}")
                         # print(f"Initial Buy:    {format_sol(token_info.get('initialBuy', 0))}")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")
+                        pump_fun.buy(mint_str, sol_in, slippage)
                         # # print(f"Bonding Curve:  {token_info.get('bondingCurveKey')}")
                         # # print(f"Virtual SOL:    {format_sol(token_info.get('vSolInBondingCurve', 0))}")
                         # # print(f"Virtual Tokens: {token_info.get('vTokensInBondingCurve', 0):,.0f}")
@@ -59,16 +60,17 @@ async def listen_for_new_tokens():
                         # # print(f"Signature:      {token_info.get('signature')}")
                         # print("=" * 50)
                         # await asyncio.sleep(12)
-                        # pump_fun.sell(mint_str, percentage, slippage)
-                        # print("done20")
+                        pump_fun.sell(mint_str, percentage, slippage)
+                        print("done20")
                     else :
                         mint_str = token_info.get('mint')
                         print(mint_str)
-                        # pump_fun.buy(mint_str, sol_in, slippage)
+                        
                         print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")
+                        pump_fun.buy(mint_str, sol_in, slippage)
                         # await asyncio.sleep(37)
-                        # pump_fun.sell(mint_str, percentage, slippage)
+                        pump_fun.sell(mint_str, percentage, slippage)
                         # print("done40")
             except websockets.exceptions.ConnectionClosed:
                 print("\nWebSocket connection closed. Reconnecting...")
