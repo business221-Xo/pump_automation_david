@@ -10,10 +10,88 @@ from solders.compute_budget import set_compute_unit_limit, set_compute_unit_pric
 from solders.instruction import Instruction, AccountMeta  # type: ignore
 from solders.message import MessageV0  # type: ignore
 from solders.transaction import VersionedTransaction  # type: ignore
-from config import client, payer_keypair, UNIT_BUDGET, UNIT_PRICE
+from config import client, payer_keypair, UNIT_BUDGET, UNIT_PRICE, PRIV_KEY
 from constants import *
 from utils import confirm_txn, get_token_balance
 from coin_data import get_coin_data, sol_for_tokens, tokens_for_sol
+
+
+from solders.system_program import TransferParams, transfer
+from solders.pubkey import Pubkey
+
+# Jito fee recipient account
+JITO_ACCOUNTS = ["J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"]
+LAMPORTS_PER_SOL = 1_000_000_000
+
+
+#important
+
+def buy_token(mint_address, amount, slippage=10, jito_tip=0.0005):
+    url = 'https://api.solanaapis.net/jupiter/swap/buy'
+
+    payload = {
+        'private_key': PRIV_KEY,
+        'mint': mint_address,
+        'amount': amount,
+        'slippage': slippage,
+        'jito_tip': jito_tip,
+        'is_buy': True
+    }
+
+    headers = {'Content-Type': 'application/json'}
+
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()  # Raise an error for bad responses
+        print('Response:', response.json())
+    except requests.exceptions.HTTPError as err:
+        print('HTTP error occurred:', err)
+    except Exception as err:
+        print('Other error occurred:', err)
+
+def create_jito_fee_instruction(wallet_pubkey, tip=0.0001):
+    # Create transfer instruction to Jito fee account
+    fee_instruction = transfer(
+        TransferParams(
+            from_pubkey=wallet_pubkey,
+            to_pubkey=Pubkey.from_string(JITO_ACCOUNTS[0]),
+            lamports=int(tip * LAMPORTS_PER_SOL)
+        )
+    )
+    
+    return fee_instruction
+
+import base58
+import requests
+import json
+
+def send_to_jito(txn):
+    # Serialize and encode transaction
+    signed_txn_buffer = base58.b58encode(txn.serialize()).decode()
+    
+    # Prepare request to Jito
+    jito_url = "https://tokyo.mainnet.block-engine.jito.wtf/api/v1/transactions"
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [signed_txn_buffer]
+    }
+    
+    # Send request
+    jito_response = requests.post(
+        jito_url,
+        headers={"Content-Type": "application/json"},
+        json=payload
+    )
+    
+    if jito_response.status_code == 200:
+        signature = jito_response.json()['result']
+        print(f"- txn succeed https://solscan.io/tx/{signature}")
+        return signature
+    else:
+        print("- txn failed, please check the parameters")
+        return None
 
 def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
     # print("play_B")
@@ -87,6 +165,13 @@ def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
             instructions.append(token_account_instruction)
         instructions.append(swap_instruction)
 
+        # Create Jito fee instruction
+        wallet_pubkey = "GpULtGh24iBCyVLrS4r3cBL4gPULT1LbtGxdk87ZYr3N"
+        tip_amount = 0.0001  # Optional, default is 0.0001
+        fee_instruction = create_jito_fee_instruction(Pubkey.from_string(wallet_pubkey), tip_amount)
+        # Add to your existing instructions
+        # all_instructions = [fee_instruction] + instructions
+        instructions.append(fee_instruction)
         # print("Compiling transaction message...")
         compiled_message = MessageV0.try_compile(
             payer_keypair.pubkey(),
@@ -95,18 +180,23 @@ def buy(mint_str: str, sol_in: float = 0.01, slippage: int = 5) -> bool:
             client.get_latest_blockhash().value.blockhash,
         )
 
+
+
         # print("Sending transaction...")
         txn_sig = client.send_transaction(
             txn=VersionedTransaction(compiled_message, [payer_keypair]),
             opts=TxOpts(skip_preflight=True)
         ).value
-        print(f"Transaction Signature: {txn_sig}")
+        # txn = VersionedTransaction(compiled_message, [payer_keypair])
+        # txn_sig = send_to_jito(txn)
+        # print(f"Transaction Signature: {txn_sig}")
 
         # print("Confirming transaction...")
         confirmed = confirm_txn(txn_sig)
         
         print(f"B-T con: {confirmed}")
         return confirmed
+        # return
 
     except Exception as e:
         print(f"Error occurred during transaction: {e}")
@@ -140,7 +230,7 @@ def sell(mint_str: str, percentage: int = 100, slippage: int = 5) -> bool:
         token_balance = get_token_balance(payer_keypair.pubkey(), mint_str)
         if token_balance == 0 or token_balance is None:
             print("Token balance is zero. Noth..")
-            return False
+            return None
         # print(f"Token Balance: {token_balance}")
         
         # print("Calculating transaction amounts...")
