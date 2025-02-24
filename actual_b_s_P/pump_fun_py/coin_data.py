@@ -32,7 +32,8 @@ def get_virtual_reserves(bonding_curve: Pubkey):
         data = account_info.value.data
         parsed_data = bonding_curve_struct.parse(data)
         return parsed_data
-    except Exception:
+    except Exception as e:
+        print(f"An error occurred: {e}")
         return None
 
 def derive_bonding_curve_accounts(mint_str: str):
