@@ -139,7 +139,7 @@ def sell(mint_str: str, percentage: int = 100, slippage: int = 5) -> bool:
         # print("Retrieving token balance...")
         token_balance = get_token_balance(payer_keypair.pubkey(), mint_str)
         if token_balance == 0 or token_balance is None:
-            print("Token balance is zero. Nothing to sell.")
+            print("Token balance is zero. Noth..")
             return False
         # print(f"Token Balance: {token_balance}")
         

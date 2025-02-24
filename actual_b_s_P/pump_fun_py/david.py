@@ -50,11 +50,11 @@ def listen_for_new_tokens():
                     print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                     print(f"{format_sol(token_info.get('marketCapSol', 0))}")
                     # time.sleep(1)
-                    # buy(mint_str, sol_in, slippage)
+                    buy(mint_str, sol_in, slippage)
                     # time.sleep(22)
-                    # b_state = sell(mint_str, percentage, slippage)
-                    # while b_state is None:
-                    #     b_state = sell(mint_str, percentage, slippage)
+                    b_state = sell(mint_str, percentage, slippage)
+                    while b_state is None:
+                        b_state = sell(mint_str, percentage, slippage)
                     # print("done20")
                 else:
                     sol_in = .02
@@ -63,11 +63,11 @@ def listen_for_new_tokens():
                     print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                     print(f"{format_sol(token_info.get('marketCapSol', 0))}")
                     # time.sleep(1)
-        #             buy(mint_str, sol_in, slippage)
+                    buy(mint_str, sol_in, slippage)
         #             time.sleep(32)
-        #             s_state = sell(mint_str, percentage, slippage)
-        #             while s_state is None:
-        #                 s_state = sell(mint_str, percentage, slippage)
+                    s_state = sell(mint_str, percentage, slippage)
+                    while s_state is None:
+                        s_state = sell(mint_str, percentage, slippage)
         #             print("done40")
         # except websocket.WebSocketException as e:
             print(f"\nWebSocket connection closed. Reconnecting...")
