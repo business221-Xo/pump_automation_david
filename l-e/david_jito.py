@@ -1,3 +1,4 @@
+import time
 import websockets
 import asyncio
 import json
@@ -8,10 +9,10 @@ import sys
 sys.path.append('../actual_b_s_P/pump_fun_py')
 
 import pump_fun_jito
-sol_in = .02
+sol_in = .08
 slippage = 5
 percentage = 100
-jito_tip=0.0002
+jito_tip=0.0001
 # PumpPortal WebSocket URL
 WS_URL = "wss://pumpportal.fun/api/data"
 
@@ -86,12 +87,14 @@ async def listen_for_new_tokens():
                         # print("=" * 50)
                         # private_key, mint_address, amount, slippage=10, jito_tip=0.0005
                         # pump_fun_jito.buy_token(mint_str, sol_in, slippage, jito_tip)
-                        pump_fun_jito.buy(mint_str, sol_in, slippage)
-                        await asyncio.sleep(6)
-                        b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
-                        while b_state is False:
-                            b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
-                        print("done20")
+
+                        # pump_fun_jito.buy(mint_str, sol_in, slippage)
+                        # # await asyncio.sleep(6)
+                        # time.sleep(6)
+                        # b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        # while b_state is False:
+                        #     b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        print("d20")
                     else :
                         mint_str = token_info.get('mint')
                         print(mint_str)
@@ -99,12 +102,14 @@ async def listen_for_new_tokens():
                         print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")
                         # pump_fun_jito.buy_token(mint_str, sol_in, slippage, jito_tip)
-                        pump_fun_jito.buy(mint_str, sol_in, slippage)
-                        await asyncio.sleep(64)
-                        s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
-                        while s_state is False:
-                            s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
-                        print("done40")
+
+                        # pump_fun_jito.buy(mint_str, sol_in, slippage)
+                        # # await asyncio.sleep(64)
+                        # time.sleep(64)
+                        # s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        # while s_state is False:
+                        #     s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        # print("d40")
             except websockets.exceptions.ConnectionClosed:
                 print("\nWebSocket connection closed. Reconnecting...")
                 break
