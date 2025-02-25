@@ -172,7 +172,7 @@ def buy(mint_str: str, sol_in: float, slippage) -> bool:
 
         # Create Jito fee instruction
         wallet_pubkey = "GpULtGh24iBCyVLrS4r3cBL4gPULT1LbtGxdk87ZYr3N"
-        tip_amount = 0.0001  # Optional, default is 0.0001
+        tip_amount = 0.002  # Optional, default is 0.0001
         fee_instruction = create_jito_fee_instruction(Pubkey.from_string(wallet_pubkey), tip_amount)
         # Add to your existing instructions
         # all_instructions = [fee_instruction] + instructions
@@ -213,10 +213,11 @@ def buy(mint_str: str, sol_in: float, slippage) -> bool:
         # print(f"Transaction Signature: {txn_sig}")
 
         # print("Confirming transaction...")
-        confirmed = confirm_txn(txn_sig)
+        # confirmed = confirm_txn(txn_sig)
         
-        print(f"B-T con: {confirmed}")
-        return confirmed
+        # print(f"B-T con: {confirmed}")
+        print(f"B-T tx: {txn_sig}")
+        return
         # return
 
     except Exception as e:
