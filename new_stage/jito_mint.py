@@ -1,35 +1,57 @@
+# pump token mint_buy
 import requests
 import base58
 from solders.transaction import VersionedTransaction
 from solders.keypair import Keypair
+from config import MAINADDRESS, ADDRESS1, ADDRESS2, ADDRESS3, ADDRESS4
+
+import base58
+from solders.keypair import Keypair
+
+# WALLETS_AMOUNT = 4
+# generated_wallets = []
+# def generate_wallet():
+#     for x in range(WALLETS_AMOUNT):
+#         account = Keypair()
+#         publicKey = str(account.pubkey())
+#         privateKey = base58.b58encode(account.secret() + base58.b58decode(str(account.pubkey()))).decode('utf-8')
+#         wallet = {
+#             "pubKey": publicKey,
+#             "priKey": privateKey
+#         }
+#         generated_wallets.append(wallet)
+
 
 def send_create_tx_bundle():
     signerKeypairs = [
-        Keypair.from_base58_string("Wallet A base 58 private key here"),
-        Keypair.from_base58_string("Wallet B base 58 private key here")
+        Keypair.from_base58_string(MAINADDRESS),
+        Keypair.from_base58_string(ADDRESS1),
+        Keypair.from_base58_string(ADDRESS2),
+        Keypair.from_base58_string(ADDRESS3),
+        Keypair.from_base58_string(ADDRESS4)
         # use up to 5 wallets
     ]
 
     # Generate a random keypair for token
     mint_keypair = Keypair()
+    print(str(mint_keypair.pubkey()))
 
     # Define token metadata
     form_data = {
-        'name': 'PPTest',
-        'symbol': 'TEST',
-        'description': 'This is an example token created via PumpPortal.fun',
+        'name': 'UAwar',
+        'symbol': 'UAwar',
+        'description': 'Who will be the winner',
         'twitter': 'https://x.com/a1lon9/status/1812970586420994083',
         'telegram': 'https://x.com/a1lon9/status/1812970586420994083',
-        'website': 'https://pumpportal.fun',
+        'website': 'https://UA-RUS.net',
         'showName': 'true'
     }
 
-    # Read the image file
-    with open('./example.png', 'rb') as f:
+    with open('./bear.png', 'rb') as f:
         file_content = f.read()
 
     files = {
-        'file': ('example.png', file_content, 'image/png')
+        'file': ('bear.png', file_content, 'image/png')
     }
 
     # Create IPFS metadata storage
@@ -49,18 +71,48 @@ def send_create_tx_bundle():
             'action': 'create',
             'tokenMetadata': token_metadata,
             'mint': str(mint_keypair.pubkey()),
-            'denominatedInSol': 'false',
-            'amount': 1000000, # Dev buy of 1000000 tokens
+            'denominatedInSol': 'true',
+            'amount': 0.1,
             'slippage': 10,
-            'priorityFee': 0.0005,
+            'priorityFee': 0.0002,
             'pool': 'pump'
         },
         {
             "publicKey": str(signerKeypairs[1].pubkey()),
-            "action": "buy",  # "buy", "sell", or "create"
+            "action": "buy", 
             "mint": str(mint_keypair.pubkey()), 
-            "denominatedInSol": "false",
-            "amount": 1000000,
+            "denominatedInSol": "true",
+            "amount": 0.01,
+            "slippage": 50,
+            "priorityFee": 0.0001, # priority fee after first tx is ignored
+            "pool": "pump"
+        },
+        {
+            "publicKey": str(signerKeypairs[2].pubkey()),
+            "action": "buy", 
+            "mint": str(mint_keypair.pubkey()), 
+            "denominatedInSol": "true",
+            "amount": 0.01,
+            "slippage": 50,
+            "priorityFee": 0.0001, # priority fee after first tx is ignored
+            "pool": "pump"
+        },
+        {
+            "publicKey": str(signerKeypairs[3].pubkey()),
+            "action": "buy", 
+            "mint": str(mint_keypair.pubkey()), 
+            "denominatedInSol": "true",
+            "amount": 0.01,
+            "slippage": 50,
+            "priorityFee": 0.0001, # priority fee after first tx is ignored
+            "pool": "pump"
+        },
+        {
+            "publicKey": str(signerKeypairs[4].pubkey()),
+            "action": "buy", 
+            "mint": str(mint_keypair.pubkey()), 
+            "denominatedInSol": "true",
+            "amount": 0.01,
             "slippage": 50,
             "priorityFee": 0.0001, # priority fee after first tx is ignored
             "pool": "pump"
