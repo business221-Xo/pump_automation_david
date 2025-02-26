@@ -14,7 +14,7 @@ def send_create_tx_bundle():
     # Generate a random keypair for token
     mint_keypair = Keypair()
     print(str(mint_keypair.pubkey()))
-    # Define token metadata
+   
     form_data = {
         'name': 'PPTrump',
         'symbol': 'PPTrump',
