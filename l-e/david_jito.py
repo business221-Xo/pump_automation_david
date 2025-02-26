@@ -70,15 +70,15 @@ async def listen_for_new_tokens():
                 if token_info.get('marketCapSol') > 42 :
                     if token_info.get('marketCapSol') < 110 : 
                         mint_str = token_info.get('mint')
-                        print(mint_str)
+                        # print(mint_str)
                         
                         # print("\n" + "=" * 50)
-                        print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
+                        # print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         # print("=" * 50)
                         # print(f"Address:        {token_info.get('mint')}")
                         # # print(f"Creator:        {token_info.get('traderPublicKey')}")
                         # print(f"Initial Buy:    {format_sol(token_info.get('initialBuy', 0))}")
-                        print(f"{format_sol(token_info.get('marketCapSol', 0))}")                 
+                        # print(f"{format_sol(token_info.get('marketCapSol', 0))}")                 
                         # # print(f"Bonding Curve:  {token_info.get('bondingCurveKey')}")
                         # # print(f"Virtual SOL:    {format_sol(token_info.get('vSolInBondingCurve', 0))}")
                         # # print(f"Virtual Tokens: {token_info.get('vTokensInBondingCurve', 0):,.0f}")
@@ -109,7 +109,7 @@ async def listen_for_new_tokens():
                         # s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
                         # while s_state is False:
                         #     s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
-                        # print("d40")
+                        print("d40")
             except websockets.exceptions.ConnectionClosed:
                 print("\nWebSocket connection closed. Reconnecting...")
                 break
