@@ -1,52 +1,31 @@
-# pump token mint_buy
 import requests
 import base58
 from solders.transaction import VersionedTransaction
 from solders.keypair import Keypair
 from config import MAINADDRESS, ADDRESS1, ADDRESS2, ADDRESS3, ADDRESS4
 
-import base58
-from solders.keypair import Keypair
-
-# WALLETS_AMOUNT = 4
-# generated_wallets = []
-# def generate_wallet():
-#     for x in range(WALLETS_AMOUNT):
-#         account = Keypair()
-#         publicKey = str(account.pubkey())
-#         privateKey = base58.b58encode(account.secret() + base58.b58decode(str(account.pubkey()))).decode('utf-8')
-#         wallet = {
-#             "pubKey": publicKey,
-#             "priKey": privateKey
-#         }
-#         generated_wallets.append(wallet)
-
-
 def send_create_tx_bundle():
     signerKeypairs = [
         Keypair.from_base58_string(MAINADDRESS),
-        Keypair.from_base58_string(ADDRESS1),
-        # Keypair.from_base58_string(ADDRESS2),
-        # Keypair.from_base58_string(ADDRESS3),
-        # Keypair.from_base58_string(ADDRESS4)
+        Keypair.from_base58_string(ADDRESS1)
         # use up to 5 wallets
     ]
 
     # Generate a random keypair for token
     mint_keypair = Keypair()
     print(str(mint_keypair.pubkey()))
-
     # Define token metadata
     form_data = {
-        'name': 'UARUS',
-        'symbol': 'UARUS',
-        'description': 'Who will be the winner',
+        'name': 'PPTrump',
+        'symbol': 'PPTrump',
+        'description': 'Claim in US',
         'twitter': 'https://x.com/a1lon9/status/1812970586420994083',
         'telegram': 'https://x.com/a1lon9/status/1812970586420994083',
-        'website': 'https://UA-RUS.net',
+        'website': 'https://pumpportal.fun',
         'showName': 'true'
     }
 
+    # Read the image file
     with open('./butter.png', 'rb') as f:
         file_content = f.read()
 
@@ -72,51 +51,21 @@ def send_create_tx_bundle():
             'tokenMetadata': token_metadata,
             'mint': str(mint_keypair.pubkey()),
             'denominatedInSol': 'true',
-            'amount': 0.01,
+            'amount': 0.001, # Dev buy of 1000000 tokens
             'slippage': 10,
             'priorityFee': 0.0001,
             'pool': 'pump'
         },
         {
             "publicKey": str(signerKeypairs[1].pubkey()),
-            "action": "buy", 
+            "action": "buy",  # "buy", "sell", or "create"
             "mint": str(mint_keypair.pubkey()), 
             "denominatedInSol": "true",
-            "amount": 0.01,
+            "amount": 0.001,
             "slippage": 50,
             "priorityFee": 0.0001, # priority fee after first tx is ignored
             "pool": "pump"
-        },
-        # {
-        #     "publicKey": str(signerKeypairs[2].pubkey()),
-        #     "action": "buy", 
-        #     "mint": str(mint_keypair.pubkey()), 
-        #     "denominatedInSol": "true",
-        #     "amount": 0.01,
-        #     "slippage": 50,
-        #     "priorityFee": 0.0001, # priority fee after first tx is ignored
-        #     "pool": "pump"
-        # },
-        # {
-        #     "publicKey": str(signerKeypairs[3].pubkey()),
-        #     "action": "buy", 
-        #     "mint": str(mint_keypair.pubkey()), 
-        #     "denominatedInSol": "true",
-        #     "amount": 0.01,
-        #     "slippage": 50,
-        #     "priorityFee": 0.0001, # priority fee after first tx is ignored
-        #     "pool": "pump"
-        # },
-        # {
-        #     "publicKey": str(signerKeypairs[4].pubkey()),
-        #     "action": "buy", 
-        #     "mint": str(mint_keypair.pubkey()), 
-        #     "denominatedInSol": "true",
-        #     "amount": 0.01,
-        #     "slippage": 50,
-        #     "priorityFee": 0.0001, # priority fee after first tx is ignored
-        #     "pool": "pump"
-        # }
+        }
         # use up to 5 transactions
     ]
 
@@ -126,7 +75,6 @@ def send_create_tx_bundle():
         headers={"Content-Type": "application/json"},
         json=bundledTransactionArgs
     )
-    
 
     if response.status_code != 200: 
         print("Failed to generate transactions.")
@@ -157,8 +105,8 @@ def send_create_tx_bundle():
                 ]
             }
         )
-        if jito_response.status_code == 200: 
-            for i, signature in enumerate(txSignatures):
-                print(f'Transaction {i}: https://solscan.io/tx/{signature}')
+
+        for i, signature in enumerate(txSignatures):
+            print(f'Transaction {i}: https://solscan.io/tx/{signature}')
 
 send_create_tx_bundle()
