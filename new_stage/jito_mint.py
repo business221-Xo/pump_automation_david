@@ -26,9 +26,9 @@ def send_create_tx_bundle():
     signerKeypairs = [
         Keypair.from_base58_string(MAINADDRESS),
         Keypair.from_base58_string(ADDRESS1),
-        Keypair.from_base58_string(ADDRESS2),
-        Keypair.from_base58_string(ADDRESS3),
-        Keypair.from_base58_string(ADDRESS4)
+        # Keypair.from_base58_string(ADDRESS2),
+        # Keypair.from_base58_string(ADDRESS3),
+        # Keypair.from_base58_string(ADDRESS4)
         # use up to 5 wallets
     ]
 
@@ -38,8 +38,8 @@ def send_create_tx_bundle():
 
     # Define token metadata
     form_data = {
-        'name': 'UAwar',
-        'symbol': 'UAwar',
+        'name': 'UARUS',
+        'symbol': 'UARUS',
         'description': 'Who will be the winner',
         'twitter': 'https://x.com/a1lon9/status/1812970586420994083',
         'telegram': 'https://x.com/a1lon9/status/1812970586420994083',
@@ -47,11 +47,11 @@ def send_create_tx_bundle():
         'showName': 'true'
     }
 
-    with open('./bear.png', 'rb') as f:
+    with open('./butter.png', 'rb') as f:
         file_content = f.read()
 
     files = {
-        'file': ('bear.png', file_content, 'image/png')
+        'file': ('butter.png', file_content, 'image/png')
     }
 
     # Create IPFS metadata storage
@@ -72,9 +72,9 @@ def send_create_tx_bundle():
             'tokenMetadata': token_metadata,
             'mint': str(mint_keypair.pubkey()),
             'denominatedInSol': 'true',
-            'amount': 0.1,
+            'amount': 0.01,
             'slippage': 10,
-            'priorityFee': 0.0002,
+            'priorityFee': 0.0001,
             'pool': 'pump'
         },
         {
@@ -87,36 +87,36 @@ def send_create_tx_bundle():
             "priorityFee": 0.0001, # priority fee after first tx is ignored
             "pool": "pump"
         },
-        {
-            "publicKey": str(signerKeypairs[2].pubkey()),
-            "action": "buy", 
-            "mint": str(mint_keypair.pubkey()), 
-            "denominatedInSol": "true",
-            "amount": 0.01,
-            "slippage": 50,
-            "priorityFee": 0.0001, # priority fee after first tx is ignored
-            "pool": "pump"
-        },
-        {
-            "publicKey": str(signerKeypairs[3].pubkey()),
-            "action": "buy", 
-            "mint": str(mint_keypair.pubkey()), 
-            "denominatedInSol": "true",
-            "amount": 0.01,
-            "slippage": 50,
-            "priorityFee": 0.0001, # priority fee after first tx is ignored
-            "pool": "pump"
-        },
-        {
-            "publicKey": str(signerKeypairs[4].pubkey()),
-            "action": "buy", 
-            "mint": str(mint_keypair.pubkey()), 
-            "denominatedInSol": "true",
-            "amount": 0.01,
-            "slippage": 50,
-            "priorityFee": 0.0001, # priority fee after first tx is ignored
-            "pool": "pump"
-        }
+        # {
+        #     "publicKey": str(signerKeypairs[2].pubkey()),
+        #     "action": "buy", 
+        #     "mint": str(mint_keypair.pubkey()), 
+        #     "denominatedInSol": "true",
+        #     "amount": 0.01,
+        #     "slippage": 50,
+        #     "priorityFee": 0.0001, # priority fee after first tx is ignored
+        #     "pool": "pump"
+        # },
+        # {
+        #     "publicKey": str(signerKeypairs[3].pubkey()),
+        #     "action": "buy", 
+        #     "mint": str(mint_keypair.pubkey()), 
+        #     "denominatedInSol": "true",
+        #     "amount": 0.01,
+        #     "slippage": 50,
+        #     "priorityFee": 0.0001, # priority fee after first tx is ignored
+        #     "pool": "pump"
+        # },
+        # {
+        #     "publicKey": str(signerKeypairs[4].pubkey()),
+        #     "action": "buy", 
+        #     "mint": str(mint_keypair.pubkey()), 
+        #     "denominatedInSol": "true",
+        #     "amount": 0.01,
+        #     "slippage": 50,
+        #     "priorityFee": 0.0001, # priority fee after first tx is ignored
+        #     "pool": "pump"
+        # }
         # use up to 5 transactions
     ]
 
@@ -126,6 +126,7 @@ def send_create_tx_bundle():
         headers={"Content-Type": "application/json"},
         json=bundledTransactionArgs
     )
+    
 
     if response.status_code != 200: 
         print("Failed to generate transactions.")
@@ -156,8 +157,8 @@ def send_create_tx_bundle():
                 ]
             }
         )
-
-        for i, signature in enumerate(txSignatures):
-            print(f'Transaction {i}: https://solscan.io/tx/{signature}')
+        if jito_response.status_code == 200: 
+            for i, signature in enumerate(txSignatures):
+                print(f'Transaction {i}: https://solscan.io/tx/{signature}')
 
 send_create_tx_bundle()
