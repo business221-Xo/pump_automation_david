@@ -15,8 +15,8 @@ import sys
 sys.path.append('../actual_b_s_P/pump_fun_py')
 
 import pump_fun_jito
-sol_in = .001
-slippage = 20
+sol_in = .01
+slippage = 10
 percentage = 100
 jito_tip=0.0001
 # PumpPortal WebSocket URL
@@ -93,7 +93,7 @@ async def listen_for_new_tokens():
                         # buy_token(api, mint_str, sol_in, slippage, jito_tip)
                         # test_buy_request(api, mint_str, sol_in, slippage)
 
-                        pump_fun_jito.buy(mint_str, sol_in, slippage)
+                        pump_fun_jito.buy(mint_str, sol_in, slippage, token_info.get('vSolInBondingCurve', 0), token_info.get('vTokensInBondingCurve', 0))
                         await asyncio.sleep(7)
                         # time.sleep(6)
                         b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
