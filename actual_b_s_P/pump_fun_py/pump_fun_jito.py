@@ -92,7 +92,7 @@ def send_to_jito(txn):
     
     if jito_response.status_code == 200:
         signature = jito_response.json()['result']
-        print(f"txn suc https://solscan.io/tx/{signature}")
+        # print(f"txn suc https://solscan.io/tx/{signature}")
         return signature
     else:
         print("txn fai, please check the parameters")
@@ -112,7 +112,7 @@ def get_token_price_from_m(token_address):
     )
     return result.get('nativePrice', {}).get('value')
 
-def buy(mint_str: str, sol_in: float, slippage) -> bool:
+def buy(mint_str: str, sol_in: float, slippage, vSolInBondingCurve, vTokenInBondingCurve) -> bool:
     # print("play_B")
     try:
         # print(f"Starting buy transaction for mint: {mint_str}")
@@ -145,17 +145,19 @@ def buy(mint_str: str, sol_in: float, slippage) -> bool:
         # print("Calculating transaction amounts...")
         sol_dec = 1e9
         token_dec = 1e6
-        virtual_sol_reserves = coin_data.virtual_sol_reserves / sol_dec
-        virtual_token_reserves = coin_data.virtual_token_reserves / token_dec
+        # virtual_sol_reserves = coin_data.virtual_sol_reserves / sol_dec
+        # virtual_token_reserves = coin_data.virtual_token_reserves / token_dec
+        virtual_sol_reserves = vSolInBondingCurve
+        virtual_token_reserves = vTokenInBondingCurve
         amount = sol_for_tokens(sol_in, virtual_sol_reserves, virtual_token_reserves)
         amount = int(amount * token_dec)
-        amount = int(5000000 * token_dec)
+        # amount = int(100000 * token_dec)
         
         slippage_adjustment = 1 + (slippage / 100)
         max_sol_cost = int((sol_in * slippage_adjustment) * sol_dec)
-        sol_token_price = float(get_token_price_from_m(MINT)) / (1000000000)
-        print(f"Sol Token Price: {sol_token_price}")
-        amount = int(sol_in / sol_token_price)
+        # sol_token_price = float(get_token_price_from_m(mint_str)) / (1000000000)
+        # print(f"Sol Token Price: {sol_token_price}")
+        # amount = int(sol_in / sol_token_price)
         # print(f"Amount: {amount}, Max Sol Cost: {max_sol_cost}")
 
         # print("Creating swap instructions...")

@@ -15,7 +15,7 @@ import sys
 sys.path.append('../actual_b_s_P/pump_fun_py')
 
 import pump_fun_jito
-sol_in = .01
+sol_in = .1
 slippage = 10
 percentage = 100
 jito_tip=0.0001
