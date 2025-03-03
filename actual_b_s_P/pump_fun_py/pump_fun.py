@@ -202,7 +202,7 @@ def sell(mint_str: str, percentage: int = 100, slippage: int = 5) -> bool:
             txn=VersionedTransaction(compiled_message, [payer_keypair]),
             opts=TxOpts(skip_preflight=True)
         ).value
-        print(f"Transaction Signature: {txn_sig}")
+        # print(f"Transaction Signature: {txn_sig}")
 
         # print("Confirming transaction...")
         confirmed = confirm_txn(txn_sig)
