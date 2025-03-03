@@ -4,6 +4,11 @@ import websockets
 import asyncio
 import json
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api = os.getenv('API_KEY')
 
 import sys
 # Assuming Directory A is a sibling of Directory B
@@ -87,14 +92,14 @@ async def listen_for_new_tokens():
                         # # print(f"Signature:      {token_info.get('signature')}")
                         # print("=" * 50)
                         # private_key, mint_address, amount, slippage=10, jito_tip=0.0005
-                        # pump_fun_jito.buy_token(mint_str, sol_in, slippage, jito_tip)
+                        buy_token(api, mint_str, sol_in, slippage, jito_tip)
 
                         # pump_fun_jito.buy(mint_str, sol_in, slippage)
-                        # # await asyncio.sleep(6)
+                        await asyncio.sleep(6)
                         # time.sleep(6)
-                        # b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
-                        # while b_state is False:
-                        #     b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        while b_state is False:
+                            b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
                         print("d20")
                     else :
                         mint_str = token_info.get('mint')
@@ -102,14 +107,14 @@ async def listen_for_new_tokens():
                         
                         # print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")
-                        # pump_fun_jito.buy_token(mint_str, sol_in, slippage, jito_tip)
+                        buy_token(mint_str, sol_in, slippage, jito_tip)
 
                         # pump_fun_jito.buy(mint_str, sol_in, slippage)
-                        # # await asyncio.sleep(64)
+                        await asyncio.sleep(64)
                         # time.sleep(64)
-                        # s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
-                        # while s_state is False:
-                        #     s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        while s_state is False:
+                            s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
                         print("d40")
             except websockets.exceptions.ConnectionClosed:
                 print("\nWebSocket connection closed. Reconnecting...")
