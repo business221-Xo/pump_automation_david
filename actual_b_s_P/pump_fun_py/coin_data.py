@@ -28,14 +28,23 @@ def get_virtual_reserves(bonding_curve: Pubkey):
         "complete" / Flag
     )
     
-    try:
-        account_info = client.get_account_info(bonding_curve)
-        data = account_info.value.data
-        parsed_data = bonding_curve_struct.parse(data)
-        return parsed_data
-    except Exception as e:
-        # print(f"An error occurred: {e}")
-        return None
+    # Manually set the values
+    manual_values = {
+        "virtualTokenReserves": 1000000,
+        "virtualSolReserves": 20,
+        "realTokenReserves": 1000000,
+        "realSolReserves": 40,
+        "tokenTotalSupply": 5000,
+        "complete": False
+    }
+    
+    # Pack the values into a byte array
+    packed_data = bonding_curve_struct.build(manual_values)
+    
+    # Parse the manually packed data using the struct
+    parsed_data = bonding_curve_struct.parse(packed_data)
+    
+    return parsed_data
 
 def derive_bonding_curve_accounts(mint_str: str):
     try:
@@ -57,16 +66,16 @@ def get_coin_data(mint_str: str) -> Optional[CoinData]:
         return None
 
     virtual_reserves = get_virtual_reserves(bonding_curve)
-    max_attempts = 60
-    attempt = 0
-    while virtual_reserves is None and attempt < max_attempts:
-        # print(f"Waiting for data... Attempt {attempt+1}/{max_attempts}")
-        time.sleep(0.5)  # Wait for 1 second
-        virtual_reserves = get_virtual_reserves(bonding_curve)  # Try fetching again
-        attempt += 1
-    print(f"{attempt}")
-    if virtual_reserves is None:
-        return None
+    # max_attempts = 60
+    # attempt = 0
+    # while virtual_reserves is None and attempt < max_attempts:
+    #     # print(f"Waiting for data... Attempt {attempt+1}/{max_attempts}")
+    #     time.sleep(0.5)  # Wait for 1 second
+    #     virtual_reserves = get_virtual_reserves(bonding_curve)  # Try fetching again
+    #     attempt += 1
+    # print(f"{attempt}")
+    # if virtual_reserves is None:
+    #     return None
 
     try:
         return CoinData(

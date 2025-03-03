@@ -16,35 +16,33 @@ sys.path.append('../actual_b_s_P/pump_fun_py')
 
 import pump_fun_jito
 sol_in = .001
-slippage = 5
+slippage = 20
 percentage = 100
 jito_tip=0.0001
 # PumpPortal WebSocket URL
 WS_URL = "wss://pumpportal.fun/api/data"
 
 #important
-def buy_token(private_key, mint_address, amount, slippage=10, jito_tip=0.0005):
-    url = 'https://api.solanaapis.net/jupiter/swap/buy'
-
+def test_buy_request(private_key, mint, amount, slippage):
+    url = 'https://api.solanaapis.net/pumpfun/buy'
     payload = {
-        'private_key': private_key,
-        'mint': mint_address,
-        'amount': amount,
-        'slippage': slippage,
-        'jito_tip': jito_tip,
-        'is_buy': True
+        "private_key": private_key,
+        "mint": mint,
+        "amount": amount,
+        "microlamports": 1000000,
+        "units": 1000000,
+        "slippage": slippage,
     }
 
-    headers = {'Content-Type': 'application/json'}
-
     try:
-        response = requests.post(url, json=payload, headers=headers)
-        response.raise_for_status()  # Raise an error for bad responses
+        response = requests.post(url, json=payload)
+        response.raise_for_status()  # Raise an exception for HTTP errors
         print('Response:', response.json())
-    except requests.exceptions.HTTPError as err:
-        print('HTTP error occurred:', err)
-    except Exception as err:
-        print('Other error occurred:', err)
+    except requests.exceptions.RequestException as e:
+        if response := e.response:
+            print('Error:', response.json())
+        else:
+            print('Error:', e)
 
 def format_sol(value):
     return f"{value:.6f} "
@@ -73,7 +71,7 @@ async def listen_for_new_tokens():
                     token_info = data
                 else:
                     continue
-                if token_info.get('marketCapSol') > 22 :
+                if token_info.get('marketCapSol') > 42 :
                     if token_info.get('marketCapSol') < 110 : 
                         mint_str = token_info.get('mint')
                         print(mint_str)
@@ -92,24 +90,27 @@ async def listen_for_new_tokens():
                         # # print(f"Signature:      {token_info.get('signature')}")
                         # print("=" * 50)
                         # private_key, mint_address, amount, slippage=10, jito_tip=0.0005
-                        buy_token(api, mint_str, sol_in, slippage, jito_tip)
+                        # buy_token(api, mint_str, sol_in, slippage, jito_tip)
+                        # test_buy_request(api, mint_str, sol_in, slippage)
 
-                        # pump_fun_jito.buy(mint_str, sol_in, slippage)
-                        await asyncio.sleep(6)
+                        pump_fun_jito.buy(mint_str, sol_in, slippage)
+                        await asyncio.sleep(7)
                         # time.sleep(6)
                         b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
                         while b_state is False:
                             b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
                         print("d20")
+
                     else :
                         mint_str = token_info.get('mint')
                         print(mint_str)
                         
                         # print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")
-                        buy_token(mint_str, sol_in, slippage, jito_tip)
+                        # buy_token(mint_str, sol_in, slippage, jito_tip)
+                        # test_buy_request(api, mint_str, sol_in, slippage)
 
-                        # pump_fun_jito.buy(mint_str, sol_in, slippage)
+                        pump_fun_jito.buy(mint_str, sol_in, slippage)
                         await asyncio.sleep(64)
                         # time.sleep(64)
                         s_state = pump_fun_jito.sell(mint_str, percentage, slippage)

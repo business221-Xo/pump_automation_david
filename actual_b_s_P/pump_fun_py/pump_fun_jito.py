@@ -97,6 +97,20 @@ def send_to_jito(txn):
     else:
         print("txn fai, please check the parameters")
         return None
+    
+from moralis import sol_api
+def get_token_price_from_m(token_address):
+    api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImY1NjlhZTRlLTdlNjAtNDRhYS04MDMxLWJmNDllZDcxMTU2NCIsIm9yZ0lkIjoiNDI5OTk1IiwidXNlcklkIjoiNDQyMzA2IiwidHlwZUlkIjoiNWM1MmZjMGMtMTgwMS00ZWRjLWI1NDAtN2ViNjk1MzBkMmFhIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3Mzg5Mjc0MTQsImV4cCI6NDg5NDY4NzQxNH0.xqc7QBe_NBQ5od0_NRlw3Z6xicCuv2DqRVtkVqS_r8o"
+    params = {
+        "address": token_address,
+        "network": "mainnet",
+    }
+
+    result = sol_api.token.get_token_price(
+        api_key=api_key,
+        params=params,
+    )
+    return result.get('nativePrice', {}).get('value')
 
 def buy(mint_str: str, sol_in: float, slippage) -> bool:
     # print("play_B")
@@ -135,9 +149,13 @@ def buy(mint_str: str, sol_in: float, slippage) -> bool:
         virtual_token_reserves = coin_data.virtual_token_reserves / token_dec
         amount = sol_for_tokens(sol_in, virtual_sol_reserves, virtual_token_reserves)
         amount = int(amount * token_dec)
+        amount = int(5000000 * token_dec)
         
         slippage_adjustment = 1 + (slippage / 100)
         max_sol_cost = int((sol_in * slippage_adjustment) * sol_dec)
+        sol_token_price = float(get_token_price_from_m(MINT)) / (1000000000)
+        print(f"Sol Token Price: {sol_token_price}")
+        amount = int(sol_in / sol_token_price)
         # print(f"Amount: {amount}, Max Sol Cost: {max_sol_cost}")
 
         # print("Creating swap instructions...")
