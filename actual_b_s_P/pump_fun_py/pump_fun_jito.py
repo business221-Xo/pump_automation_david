@@ -151,7 +151,7 @@ def buy(mint_str: str, sol_in: float, slippage, vSolInBondingCurve, vTokenInBond
         virtual_token_reserves = vTokenInBondingCurve
         amount = sol_for_tokens(sol_in, virtual_sol_reserves, virtual_token_reserves)
         amount = int(amount * token_dec)
-        # amount = int(100000 * token_dec)
+        
         
         slippage_adjustment = 1 + (slippage / 100)
         max_sol_cost = int((sol_in * slippage_adjustment) * sol_dec)
@@ -238,7 +238,7 @@ def buy(mint_str: str, sol_in: float, slippage, vSolInBondingCurve, vTokenInBond
         # print(f"B-T con: {confirmed}")
         print(f"B-T tx: {txn_sig}")
         return
-        # return
+        
 
     except Exception as e:
         print(f"Error occurred during transaction: {e}")

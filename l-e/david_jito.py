@@ -15,10 +15,10 @@ import sys
 sys.path.append('../actual_b_s_P/pump_fun_py')
 
 import pump_fun_jito
-sol_in = .1
-slippage = 10
+sol_in = 0.3
+slippage = 50
 percentage = 100
-jito_tip=0.0001
+jito_tip=0.002
 # PumpPortal WebSocket URL
 WS_URL = "wss://pumpportal.fun/api/data"
 
@@ -71,19 +71,19 @@ async def listen_for_new_tokens():
                     token_info = data
                 else:
                     continue
-                if token_info.get('marketCapSol') > 42 :
+                if token_info.get('marketCapSol') > 12 :
                     if token_info.get('marketCapSol') < 110 : 
                         mint_str = token_info.get('mint')
                         print(mint_str)
                         
                         # print("\n" + "=" * 50)
-                        # print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
+                        print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         # print("=" * 50)
-                        # print(f"Address:        {token_info.get('mint')}")
+                        print(f"Address:        {token_info.get('mint')}")
                         # # print(f"Creator:        {token_info.get('traderPublicKey')}")
-                        # print(f"Initial Buy:    {format_sol(token_info.get('initialBuy', 0))}")
+                        print(f"Initial Buy:    {format_sol(token_info.get('initialBuy', 0))}")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")                 
-                        # # print(f"Bonding Curve:  {token_info.get('bondingCurveKey')}")
+                        print(f"Bonding Curve:  {token_info.get('bondingCurveKey')}")
                         # # print(f"Virtual SOL:    {format_sol(token_info.get('vSolInBondingCurve', 0))}")
                         # # print(f"Virtual Tokens: {token_info.get('vTokensInBondingCurve', 0):,.0f}")
                         # # print(f"Metadata URI:   {token_info.get('uri')}")
@@ -93,29 +93,30 @@ async def listen_for_new_tokens():
                         # buy_token(api, mint_str, sol_in, slippage, jito_tip)
                         # test_buy_request(api, mint_str, sol_in, slippage)
 
-                        pump_fun_jito.buy(mint_str, sol_in, slippage, token_info.get('vSolInBondingCurve', 0), token_info.get('vTokensInBondingCurve', 0))
-                        await asyncio.sleep(7)
-                        # time.sleep(6)
-                        b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
-                        while b_state is False:
-                            b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        # pump_fun_jito.buy(mint_str, sol_in, slippage, token_info.get('vSolInBondingCurve', 0), token_info.get('vTokensInBondingCurve', 0))
+                        # await asyncio.sleep(40)
+                        # # time.sleep(6)
+                        # b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        # while b_state is False:
+                        #     b_state = pump_fun_jito.sell(mint_str, percentage, slippage)
                         print("d20")
 
                     else :
                         mint_str = token_info.get('mint')
                         print(mint_str)
                         
-                        # print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
+                        print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")
+                        print(f"Initial Buy:    {format_sol(token_info.get('initialBuy', 0))}")
                         # buy_token(mint_str, sol_in, slippage, jito_tip)
                         # test_buy_request(api, mint_str, sol_in, slippage)
 
-                        pump_fun_jito.buy(mint_str, sol_in, slippage)
-                        await asyncio.sleep(64)
-                        # time.sleep(64)
-                        s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
-                        while s_state is False:
-                            s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        # pump_fun_jito.buy(mint_str, sol_in, slippage, token_info.get('vSolInBondingCurve', 0), token_info.get('vTokensInBondingCurve', 0))
+                        # await asyncio.sleep(40)
+                        # # time.sleep(64)
+                        # s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
+                        # while s_state is False:
+                        #     s_state = pump_fun_jito.sell(mint_str, percentage, slippage)
                         print("d40")
             except websockets.exceptions.ConnectionClosed:
                 print("\nWebSocket connection closed. Reconnecting...")
