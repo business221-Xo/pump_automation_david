@@ -83,7 +83,7 @@ async def listen_for_new_tokens():
                         # # print(f"Creator:        {token_info.get('traderPublicKey')}")
                         print(f"Initial Buy:    {format_sol(token_info.get('initialBuy', 0))}")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")                 
-                        # print(f"Bonding Curve:  {token_info.get('bondingCurveKey')}")
+                        print(f"Bonding Curve:  {token_info.get('bondingCurveKey')}")
                         print(f"Virtual SOL:    {format_sol(token_info.get('vSolInBondingCurve', 0))}")
                         # # print(f"Virtual Tokens: {token_info.get('vTokensInBondingCurve', 0):,.0f}")
                         # # print(f"Metadata URI:   {token_info.get('uri')}")
