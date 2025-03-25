@@ -108,6 +108,7 @@ async def listen_for_new_tokens():
                         print(f"created: {token_info.get('name')} ({token_info.get('symbol')})")
                         print(f"{format_sol(token_info.get('marketCapSol', 0))}")
                         print(f"Initial Buy:    {format_sol(token_info.get('initialBuy', 0))}")
+                        print(f"Bonding Curve:  {token_info.get('bondingCurveKey')}")
                         # buy_token(mint_str, sol_in, slippage, jito_tip)
                         # test_buy_request(api, mint_str, sol_in, slippage)
 
