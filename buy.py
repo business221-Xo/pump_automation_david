@@ -6,7 +6,7 @@ import base58
 import hashlib
 import websockets
 import time
-commit
+# commit
 from solana.rpc.async_api import AsyncClient
 from solana.transaction import Transaction
 from solana.rpc.commitment import Confirmed
@@ -179,7 +179,7 @@ def decode_create_instruction(ix_data, ix_def, accounts):
         
         args[arg['name']] = value
 
-    # Add accounts
+    # Adding accounts
     args['mint'] = str(accounts[0])
     args['bondingCurve'] = str(accounts[2])
     args['associatedBondingCurve'] = str(accounts[3])
