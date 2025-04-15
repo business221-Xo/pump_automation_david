@@ -6,7 +6,7 @@ import base58
 import hashlib
 import websockets
 import time
-#commit
+commit
 from solana.rpc.async_api import AsyncClient
 from solana.transaction import Transaction
 from solana.rpc.commitment import Confirmed
